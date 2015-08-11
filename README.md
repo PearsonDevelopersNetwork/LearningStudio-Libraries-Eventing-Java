@@ -1,6 +1,6 @@
 # LearningStudio Eventing Library
 
-LearningStudio's Eventing capabilities reduce the need to “poll” for status changes by pushing them directly to your application. This library handles the details of subscribing to messages, managing subscriptions, and verifying authenticity of received messages.
+LearningStudio's Eventing capabilities reduce the need to “poll” for status changes by pushing them directly to your application. This library handles the details of subscribing to messages, managing subscriptions, and verifying authenticity of received messages. This user guide describes the various functionality and use cases, but you can also skip straight to the [auto-generated documentation](http://pearsondevelopersnetwork.github.io/LearningStudio-Libraries-Eventing-Java/AutoDocs/index.html) if you prefer.
 
 ## Getting Help 
 
