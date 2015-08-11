@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>LearningStudio Eventing Library in Java</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+		<link href='http://fonts.googleapis.com/css?family=Raleway:500,700|Roboto:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="assets/css/normalize.css">
+        <link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="assets/css/prism.css">
+        <script src="assets/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+	<div id="MastBar">
+		<div id="TopColorbar"> </div>
+		<div id="TitleBar">
+			<div>
+				<a href="http://developer.pearson.com" target="_blank" title="Home"><img src="assets/pdn-header-sm.png" /></a>
+				<a href="http://developer.pearson.com" target="_blank">developer.pearson.com</a>
+			</div>
+		</div>
+	</div>
+		
+	<article> 
+		<h1>The LearningStudio Eventing Library</h1>
+		<p>LearningStudio's Eventing capabilities reduce the need to “poll” for status changes by pushing them directly to your application. This library handles the details of subscribing to messages, managing subscriptions, and verifying authenticity of received messages. This user guide describes the various functionality and use cases, but you can also skip straight to the <a href="AutoDocs/index.html">auto-generated documentation</a> if you prefer.</p> 
+		<h2>Pre-Requisites</h2>
+		<h3>API Documentation</h3>
+		<p>You should be sure to read the API documentation and background information for LearningStudio Eventing while using this library. Here are some key places to start:
+			<ul>
+				<li><a href="http://developer.pearson.com/apis/eventing">Eventing Introduction</a></li>
+				<li><a href="http://developer.pearson.com/learningstudio/set-1">Eventing Setup</a></li>
+				<li><a href="http://developer.pearson.com/product/event-contracts">Event Contracts</a></li>
+			</ul>
+		</p>
+		<p>
+                <h2>Library Usage</h2>
+
+                <h4>Setup</h4>
+                <p>To begin, import the classes and configure the client that you'll be using.</p>
+                <pre><code class="language-java">import com.pearson.pdn.learningstudio.eventing.*;
+
+Configuration config = new Configuration();
+config.setPrincipalId("{principalId}");			// application id
+config.setPrincipalSecret("{principalSecret}");	// application secret
+config.setEventingServer("{eventingServer}");	// url of eventing server
+
+// client to use in following examples
+EventingClient eventing = new EventingClient(config);</code></pre>
+	
+
+                <h4>Create a subscription</h4>
+                <p>Next, create a subscription to start receiving messages at a specified endpoint.</p>
+                <pre><code class="language-java">Subscription sub = new Subscription();
+sub.setCallbackUrl("{callbackUrl}");	// url to receive message
+// each of these filters are optional, but one of them must exist
+sub.setMessageType("{messageType}");	// message type (most useful)
+sub.setSystem("{system}");				// publishing system id (rarely used)
+sub.setSubSystem("{subSystem}");		// publishing subsystem id (rarely used)
+sub.setClient("{client}");				// campus id (useful for vendors)
+sub.setClientString("{clientString}");  // campus string (useful for vendors)
+
+// Include additional filters (optional)
+Map<String, String> tags = new HashMap<String, String>();
+tags.put("{key}","{value}");	// Applicable {key} values: UserId, CourseId
+sub.setTags(tags);
+
+try {
+  eventing.subscribe(sub);
+  // these properties were populated
+  sub.getId();				// unique identifier for subscription
+  sub.getCreateDate();		// creation date of subscription
+  sub.getPrincipalId();		// principal that created subscription
+}
+catch(EventingException e) {
+  // subscribe failed
+}</code></pre>
+
+                <h4>Delete a subscription</h4>
+                <p>Your subscriptions can be deleted with the subscription identifier.</p>
+                <pre><code class="language-java">try {  
+  eventing.unsubscribe("{subscriptionId}");
+}
+catch(EventingException e) {
+  // unsubscribe failed
+}</code></pre>
+
+                <h4>Lookup all subscriptions</h4>
+                <p>All of your existing subscriptions can be retrieved.</p>
+                <pre><code class="language-java">try {
+  List<Subscription> subs = eventing.getSubscriptions();
+  // might be empty
+}
+catch(EventingException e) {
+  // subscriptions lookup failed
+}</code></pre>
+
+                <h4>Lookup a specific subscription</h4>
+                <p>A specific subscription can be retrieved with the subscription identifier.</p>
+                <pre><code class="language-java">try {
+  Subscription sub = eventing.getSubscription("{subscriptionId}");
+  // subscription found
+}
+catch(EventingException e) {
+  // subscription lookup failed
+}</code></pre>
+
+  
+                <h4>Verifiying authenticity of delivered messages</h4>
+                <p>Messages delivered to a listening endpoint can be trusted after verifying authenticity.</p>
+                <pre><code class="language-java">Delivery delivery = new Delivery();
+// populate the following with received parameters of same name
+delivery.setAttemptId("{attemptId}");					// unique delivery id (optional)
+delivery.setAuthorization("{authorization}");			// auth signature
+delivery.setMessageId("{messageId}");					// message id
+delivery.setMessageType("{messageType}");				// event type
+delivery.setPayloadContentType("{payloadContentType}");	// application/json
+delivery.setPayload("{payload}");						// json payload
+		
+try {
+  eventing.verifyAuthenticity(delivery);
+  // authorized
+}
+catch(EventingException e) {
+  // not authorized
+}</code></pre>
+
+	</article> 	
+	<footer>
+		&copy;2015 Pearson Education Inc. Libraries released under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache 2.0 License</a>. For help with these libraries or the APIs, please use the <a href="https://community.pdn.pearson.com" target="_blank">PDN Developer Community</a>.
+	</footer>
+        <script src="assets/js/prism.js"></script>
+    </body>
+</html>
