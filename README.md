@@ -25,9 +25,9 @@ You should be sure to read the API documentation and background information for 
 import com.pearson.pdn.learningstudio.eventing.*;
 
 Configuration config = new Configuration();
-config.setPrincipalId("{principalId}");		// application id
-config.setPrincipalSecret("{principalSecret}");	// application secret
-config.setEventingServer("{eventingServer}");	// url of eventing server
+config.setPrincipalId("{principalId}");         // application id
+config.setPrincipalSecret("{principalSecret}"); // application secret
+config.setEventingServer("{eventingServer}");   // url of eventing server
 
 // client to use in following examples
 EventingClient eventing = new EventingClient(config);	
@@ -37,25 +37,25 @@ EventingClient eventing = new EventingClient(config);
  
 ~~~~~~~~~~~~~~~~~~~~~~~
 Subscription sub = new Subscription();
-sub.setCallbackUrl("{callbackUrl}");	// url to receive message
+sub.setCallbackUrl("{callbackUrl}");    // url to receive message
 // each of these filters are optional, but one of them must exist
-sub.setMessageType("{messageType}");	// message type (most useful)
-sub.setSystem("{system}");		// publishing system id (rarely used)
-sub.setSubSystem("{subSystem}");	// publishing subsystem id (rarely used)
-sub.setClient("{client}");		// campus id (useful for vendors)
+sub.setMessageType("{messageType}");    // message type (most useful)
+sub.setSystem("{system}");              // publishing system id (rarely used)
+sub.setSubSystem("{subSystem}");        // publishing subsystem id (rarely used)
+sub.setClient("{client}");              // campus id (useful for vendors)
 sub.setClientString("{clientString}");  // campus string (useful for vendors)
 
 // Include additional filters (optional)
 Map<String, String> tags = new HashMap<String, String>();
-tags.put("{key}","{value}");	// Applicable {key} values: UserId, CourseId
+tags.put("{key}","{value}");    // Applicable {key} values: UserId, CourseId
 sub.setTags(tags);
 
 try {
   eventing.subscribe(sub);
   // these properties were populated
-  sub.getId();			// unique identifier for subscription
-  sub.getCreateDate();		// creation date of subscription
-  sub.getPrincipalId();		// principal that created subscription
+  sub.getId();                  // unique identifier for subscription
+  sub.getCreateDate();          // creation date of subscription
+  sub.getPrincipalId();         // principal that created subscription
 }
 catch(EventingException e) {
   // subscribe failed
@@ -102,12 +102,12 @@ catch(EventingException e) {
 ~~~~~~~~~~~~~~~~~~~~~~~
 Delivery delivery = new Delivery();
 // populate the following with received parameters of same name
-delivery.setAttemptId("{attemptId}");			// unique delivery id (optional)
-delivery.setAuthorization("{authorization}");		// auth signature
-delivery.setMessageId("{messageId}");			// message id
-delivery.setMessageType("{messageType}");		// event type
-delivery.setPayloadContentType("{payloadContentType}");	// application/json
-delivery.setPayload("{payload}");			// json payload
+delivery.setAttemptId("{attemptId}");                   // unique delivery id (optional)
+delivery.setAuthorization("{authorization}");           // auth signature
+delivery.setMessageId("{messageId}");                   // message id
+delivery.setMessageType("{messageType}");               // event type
+delivery.setPayloadContentType("{payloadContentType}"); // application/json
+delivery.setPayload("{payload}");                       // json payload
 		
 try {
   eventing.verifyAuthenticity(delivery);
